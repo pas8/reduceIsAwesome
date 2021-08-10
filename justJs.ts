@@ -1,4 +1,4 @@
-const oddSortFunc = (arr) => {
+const handleSortOddNumbers = (arr: number[]): number[] => {
   const sortedEvenArr = arr.filter((number) => number % 2).sort((a, b) => a - b);
 
   const { arr: sortedArr } = arr.reduce(
@@ -10,7 +10,7 @@ const oddSortFunc = (arr) => {
       return { arr, evenIdx };
     },
 
-    { arr: [], evenIdx: 0 }
+    { arr: [], evenIdx: 0 } as { arr: number[]; evenIdx: number }
   );
 
   return sortedArr;
@@ -18,7 +18,7 @@ const oddSortFunc = (arr) => {
 
 // console.log(oddSortFunc([7, 3, 4, 9, 5, 2, 17]));
 
-const handleZipString = (str) => {
+const handleZipString = (str: string): string => {
   const strArr = str.split('');
 
   const { arr } = strArr.reduce(
@@ -28,28 +28,55 @@ const handleZipString = (str) => {
 
       const isNumber = !Number.isNaN(+prevItem);
       const isSymbolRepeat = acc.currentSymbol === item;
-      const START_NUMBER = 2;
+      const START_STR_NUMBER = `${2}`;
 
-      const arr = [...acc.arr, isNumber ? +prevItem + 1 : START_NUMBER];
+      const arr = [...acc.arr, isNumber ? `${+prevItem + 1}` : START_STR_NUMBER];
 
       if (isSymbolRepeat) return { arr, currentSymbol: acc.currentSymbol };
 
       return { arr: [...acc.arr, item], currentSymbol: item };
     },
-    { arr: [], currentSymbol: '' }
+    { arr: [], currentSymbol: '' } as { arr: string[]; currentSymbol: string }
   );
   const zipedStr = arr.filter((item, idx) => Number.isNaN(+arr[idx + 1]) || Number.isNaN(+item)).join('');
   return zipedStr;
 };
 
-const fizzBuzzFunc = (num,powIdx) => {
-
-
-
+enum fizzzBuzzObjDenotation {
+  VALUEARR = 'valueArr',
+  CAPTION = 'caprion',
 }
 
-console.log(Array.from({ length: 12 }, (__,idx) => idx),2 ** 4) 
+const defaultFizzBuzzDenotation = [
+  {
+    [fizzzBuzzObjDenotation.VALUEARR]: [3, 5],
+    [fizzzBuzzObjDenotation.CAPTION]: 'fizzbuzz',
+  },
+  {
+    [fizzzBuzzObjDenotation.VALUEARR]: [3],
+    [fizzzBuzzObjDenotation.CAPTION]: 'fizz',
+  },
+  {
+    [fizzzBuzzObjDenotation.VALUEARR]: [5],
+    [fizzzBuzzObjDenotation.CAPTION]: 'buzz',
+  },
+] as { [fizzzBuzzObjDenotation.VALUEARR]: number[]; [fizzzBuzzObjDenotation.CAPTION]: string }[];
 
+const fizzBuzzFunc = (length: number, STARTIDX = 1, denotationArr = defaultFizzBuzzDenotation): (number | string)[] => {
+  const numberArr = Array.from({ length }, (__, idx) => idx + STARTIDX);
+
+  const fizzBuzzArr = numberArr.reduce((acc, num) => {
+    const currentValue =
+      denotationArr.find(({ valueArr }) => valueArr.every((number) => !(num % number)))?.caprion || num;
+      
+    return [...acc, currentValue];
+  }, [] as (number | string)[]);
+  
+
+  return fizzBuzzArr
+};
+
+console.log(fizzBuzzFunc(15));
 
 // console.log(handleZipString('AVVVBBBVVXDHJFFFFDDDDDDHAAAAJJJDDSLSSSDDDD'));
 
